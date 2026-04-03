@@ -1,26 +1,373 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-void: #060606;
+  --color-surface: #0E0E0E;
+  --color-surface-2: #181818;
+  --color-border: #2A2A2A;
+  --color-muted: #6B6B6B;
+  --color-subtle: #9A9A9A;
+  --color-body: #C4C2BF;
+  --color-bright: #F2F0ED;
+  --color-gold: #C8A96E;
+  --color-gold-dim: #8A6D3E;
+
+  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-sans: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-mono: var(--font-space-mono), monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: #060606;
+  color: #F2F0ED;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #060606;
+  overflow-x: hidden;
+  cursor: none;
+  font-family: var(--font-space-grotesk), system-ui, sans-serif;
+}
+
+/* ─── CUSTOM CURSOR ─────────────────────────────────────────── */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  background: #F2F0ED;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  transition: width 0.25s ease, height 0.25s ease;
+}
+
+.cursor-dot.hovering {
+  width: 32px;
+  height: 32px;
+  background: rgba(242, 240, 237, 0.12);
+  border: 1px solid rgba(242, 240, 237, 0.35);
+}
+
+/* ─── SCROLLBAR ─────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 1px; }
+::-webkit-scrollbar-track { background: #060606; }
+::-webkit-scrollbar-thumb { background: #2A2A2A; }
+
+/* ─── SELECTION ─────────────────────────────────────────────── */
+::selection {
+  background: #C8A96E;
+  color: #060606;
+}
+
+/* ─── TYPOGRAPHY UTILITIES ──────────────────────────────────── */
+.font-serif { font-family: var(--font-cormorant), Georgia, serif; }
+.font-sans  { font-family: var(--font-space-grotesk), system-ui, sans-serif; }
+.font-mono  { font-family: var(--font-space-mono), monospace; }
+
+/* ─── NOISE / GRAIN ─────────────────────────────────────────── */
+.noise-overlay {
+  position: fixed;
+  inset: -60px;
+  width: calc(100% + 120px);
+  height: calc(100% + 120px);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.028;
+  pointer-events: none;
+  z-index: 9990;
+  animation: grainAnim 0.5s steps(1) infinite;
+}
+
+@keyframes grainAnim {
+  0%   { transform: translate(0, 0); }
+  10%  { transform: translate(-20px, -28px); }
+  20%  { transform: translate(-38px, 14px); }
+  30%  { transform: translate(18px, -10px); }
+  40%  { transform: translate(-18px, 36px); }
+  50%  { transform: translate(-4px, 18px); }
+  60%  { transform: translate(28px, -14px); }
+  70%  { transform: translate(8px, 32px); }
+  80%  { transform: translate(-22px, 4px); }
+  90%  { transform: translate(12px, -40px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes scrollPulse {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(8px); }
+}
+
+/* ─── IMAGE PLACEHOLDER ─────────────────────────────────────── */
+.img-placeholder {
+  background: #131313;
+  position: relative;
+  overflow: hidden;
+}
+
+.img-placeholder::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -100%;
+  width: 60%;
+  background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,0.025) 50%, transparent 100%);
+  animation: shimmerMove 2.8s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes shimmerMove {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(350%); }
+}
+
+/* ─── GLITCH TEXT ────────────────────────────────────────────── */
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+.glitch-text:hover::before {
+  color: rgba(255, 120, 100, 0.7);
+  transform: translateX(-2px) skewX(-0.5deg);
+  clip-path: inset(30% 0 50% 0);
+  opacity: 1;
+  animation: glitchBefore 0.3s steps(2) forwards;
+}
+
+.glitch-text:hover::after {
+  color: rgba(100, 200, 255, 0.7);
+  transform: translateX(2px) skewX(0.5deg);
+  clip-path: inset(60% 0 10% 0);
+  opacity: 1;
+  animation: glitchAfter 0.3s steps(2) forwards;
+}
+
+@keyframes glitchBefore {
+  0%  { clip-path: inset(30% 0 50% 0); transform: translateX(-2px); }
+  25% { clip-path: inset(70% 0 5% 0);  transform: translateX(2px); }
+  50% { clip-path: inset(10% 0 70% 0); transform: translateX(-1px); }
+  75% { clip-path: inset(55% 0 25% 0); transform: translateX(1px); }
+  100%{ clip-path: inset(0 0 100% 0);  opacity: 0; }
+}
+
+@keyframes glitchAfter {
+  0%  { clip-path: inset(60% 0 10% 0); transform: translateX(2px); }
+  25% { clip-path: inset(5% 0 75% 0);  transform: translateX(-2px); }
+  50% { clip-path: inset(80% 0 2% 0);  transform: translateX(1px); }
+  75% { clip-path: inset(25% 0 60% 0); transform: translateX(-1px); }
+  100%{ clip-path: inset(0 0 100% 0);  opacity: 0; }
+}
+
+/* ─── CARD DRIFT (CSS, compositor thread) ────────────────────── */
+@keyframes cardDrift {
+  from { transform: translateY(0px) rotate(0deg); }
+  to   { transform: translateY(var(--drift-y, -6px)) rotate(var(--drift-r, 0.3deg)); }
+}
+
+/* ─── FRAGMENT CARD ──────────────────────────────────────────── */
+.fragment-card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #080808;
+  border: 1px solid #181818;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
+  will-change: transform;
+}
+.fragment-card:hover {
+  transform: scale(1.02);
+  border-color: #2A2A2A;
+}
+
+.fragment-shimmer {
+  position: absolute;
+  inset: 0;
+  opacity: 0.1;
+  transition: opacity 0.6s ease;
+}
+.fragment-card:hover .fragment-shimmer {
+  opacity: 0.3;
+}
+
+.fragment-accent-wash {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.fragment-card:hover .fragment-accent-wash {
+  opacity: 1;
+}
+
+.fragment-sublabel {
+  opacity: 0.45;
+  transition: opacity 0.3s ease;
+}
+.fragment-card:hover .fragment-sublabel {
+  opacity: 1;
+}
+
+.fragment-description {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fragment-card:hover .fragment-description {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fragment-accent-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+.fragment-card:hover .fragment-accent-line {
+  transform: scaleX(1);
+}
+
+/* ─── WORLD PAGE STYLES ──────────────────────────────────────── */
+.world-back-btn {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #6B6B6B;
+  transition: color 0.2s ease;
+}
+
+.world-back-btn:hover {
+  color: #F2F0ED;
+}
+
+/* ─── HORIZONTAL RULE ────────────────────────────────────────── */
+.hr-subtle {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #2A2A2A 30%, #2A2A2A 70%, transparent);
+}
+
+.hr-gold {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #C8A96E 30%, #C8A96E 70%, transparent);
+}
+
+/* ─── WORLDS GRID — mobile fallback (2×3 grid, no absolute pos) ── */
+@media (max-width: 640px) {
+  .worlds-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    gap: 0.4rem;
+    padding: 0 0 0.4rem;
+  }
+
+  /* Football spans both columns, first row */
+  .worlds-grid > *:nth-child(1) {
+    position: static !important;
+    width: 100% !important;
+    height: 100% !important;
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  /* Art — top left */
+  .worlds-grid > *:nth-child(2) {
+    position: static !important;
+    width: 100% !important;
+    height: 100% !important;
+    grid-column: 1;
+    grid-row: 1;
+  }
+  /* Build — top right */
+  .worlds-grid > *:nth-child(3) {
+    position: static !important;
+    width: 100% !important;
+    height: 100% !important;
+    grid-column: 2;
+    grid-row: 1;
+  }
+  /* Ride — bottom left */
+  .worlds-grid > *:nth-child(4) {
+    position: static !important;
+    width: 100% !important;
+    height: 100% !important;
+    grid-column: 1;
+    grid-row: 3;
+  }
+  /* Sound — bottom right */
+  .worlds-grid > *:nth-child(5) {
+    position: static !important;
+    width: 100% !important;
+    height: 100% !important;
+    grid-column: 2;
+    grid-row: 3;
+  }
+  /* Play — spans both columns, last row - hidden on mobile to keep fit */
+  .worlds-grid > *:nth-child(6) {
+    display: none;
+  }
+
+  /* Inner motion divs need 100% size too */
+  .worlds-grid > * > * {
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+/* ─── LENIS SMOOTH SCROLL ────────────────────────────────────── */
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }
