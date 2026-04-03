@@ -43,27 +43,27 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 7px;
-  height: 7px;
+  width: 5px;
+  height: 5px;
   background: #F2F0ED;
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
   mix-blend-mode: difference;
-  transition: width 0.25s ease, height 0.25s ease;
+  transition: width 0.3s ease, height 0.3s ease, background 0.3s ease;
 }
 
 .cursor-dot.hovering {
-  width: 32px;
-  height: 32px;
-  background: rgba(242, 240, 237, 0.12);
-  border: 1px solid rgba(242, 240, 237, 0.35);
+  width: 36px;
+  height: 36px;
+  background: rgba(242, 240, 237, 0.08);
+  border: 1px solid rgba(242, 240, 237, 0.25);
 }
 
 /* ─── SCROLLBAR ─────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 1px; }
 ::-webkit-scrollbar-track { background: #060606; }
-::-webkit-scrollbar-thumb { background: #2A2A2A; }
+::-webkit-scrollbar-thumb { background: #1A1A1A; }
 
 /* ─── SELECTION ─────────────────────────────────────────────── */
 ::selection {
@@ -83,7 +83,7 @@ body {
   width: calc(100% + 120px);
   height: calc(100% + 120px);
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-  opacity: 0.028;
+  opacity: 0.038;
   pointer-events: none;
   z-index: 9990;
   animation: grainAnim 0.5s steps(1) infinite;
@@ -110,7 +110,7 @@ body {
 
 /* ─── IMAGE PLACEHOLDER ─────────────────────────────────────── */
 .img-placeholder {
-  background: #131313;
+  background: #0D0D0D;
   position: relative;
   overflow: hidden;
 }
@@ -122,8 +122,8 @@ body {
   bottom: 0;
   left: -100%;
   width: 60%;
-  background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,0.025) 50%, transparent 100%);
-  animation: shimmerMove 2.8s ease-in-out infinite;
+  background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,0.018) 50%, transparent 100%);
+  animation: shimmerMove 3.5s ease-in-out infinite;
   will-change: transform;
 }
 
@@ -186,60 +186,89 @@ body {
   to   { transform: translateY(var(--drift-y, -6px)) rotate(var(--drift-r, 0.3deg)); }
 }
 
-/* ─── FRAGMENT CARD ──────────────────────────────────────────── */
+/* ─── FRAGMENT CARD — borderless image plane ─────────────────── */
 .fragment-card {
   width: 100%;
   height: 100%;
   position: relative;
   overflow: hidden;
   background: #080808;
-  border: 1px solid #181818;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
+  /* No border — fragments are planes, not boxes */
   will-change: transform;
-}
-.fragment-card:hover {
-  transform: scale(1.02);
-  border-color: #2A2A2A;
+  transition: none;
 }
 
+/* Football fragment has a special atmospheric presence */
+.fragment-card[data-dominant="true"] {
+  background: #060606;
+}
+
+/* Image plane slow-zoom on hover — authored, not component-like */
 .fragment-shimmer {
   position: absolute;
   inset: 0;
-  opacity: 0.1;
-  transition: opacity 0.6s ease;
+  opacity: 0.12;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+  transform-origin: center;
 }
 .fragment-card:hover .fragment-shimmer {
-  opacity: 0.3;
+  transform: scale(1.06);
+  opacity: 0.28;
 }
 
+/* Accent wash */
 .fragment-accent-wash {
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.8s ease;
 }
 .fragment-card:hover .fragment-accent-wash {
   opacity: 1;
 }
 
+/* Sublabel */
 .fragment-sublabel {
-  opacity: 0.45;
-  transition: opacity 0.3s ease;
+  opacity: 0.3;
+  transition: opacity 0.5s ease;
 }
 .fragment-card:hover .fragment-sublabel {
-  opacity: 1;
+  opacity: 0.8;
 }
 
+/* Description — reveal with vertical shift */
 .fragment-description {
   opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(10px);
+  transition: opacity 0.5s ease 0.05s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.05s;
 }
 .fragment-card:hover .fragment-description {
   opacity: 1;
   transform: translateY(0);
 }
 
+/* Label — subtle brightening on hover for dominant */
+.fragment-label {
+  transition: color 0.5s ease;
+}
+
+/* Gold slash reveal — only for dominant football fragment */
+.fragment-gold-slash {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #C8A96E 40%, #C8A96E 60%, transparent 100%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fragment-card:hover .fragment-gold-slash {
+  transform: scaleX(1);
+}
+
+/* Accent line — bottom, for non-dominant */
 .fragment-accent-line {
   position: absolute;
   bottom: 0;
@@ -248,11 +277,21 @@ body {
   height: 1px;
   transform-origin: left;
   transform: scaleX(0);
-  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
 }
 .fragment-card:hover .fragment-accent-line {
   transform: scaleX(1);
+}
+
+/* Depth-recessed fragments get a subtle filter */
+.fragment-depth {
+  filter: blur(0.3px);
+  opacity: 0.82;
+}
+.fragment-depth:hover {
+  opacity: 1;
+  filter: blur(0px);
 }
 
 /* ─── WORLD PAGE STYLES ──────────────────────────────────────── */
@@ -263,24 +302,25 @@ body {
   z-index: 100;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   font-family: var(--font-space-mono), monospace;
-  font-size: 0.625rem;
-  letter-spacing: 0.15em;
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #6B6B6B;
-  transition: color 0.2s ease;
+  color: #3D3D3D;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 .world-back-btn:hover {
-  color: #F2F0ED;
+  color: #C4C2BF;
 }
 
 /* ─── HORIZONTAL RULE ────────────────────────────────────────── */
 .hr-subtle {
   border: none;
   height: 1px;
-  background: linear-gradient(90deg, transparent, #2A2A2A 30%, #2A2A2A 70%, transparent);
+  background: linear-gradient(90deg, transparent, #1A1A1A 30%, #1A1A1A 70%, transparent);
 }
 
 .hr-gold {
@@ -295,11 +335,10 @@ body {
     display: grid !important;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: repeat(3, 1fr);
-    gap: 0.4rem;
-    padding: 0 0 0.4rem;
+    gap: 0.25rem;
+    padding: 0 0 0.25rem;
   }
 
-  /* Football spans both columns, first row */
   .worlds-grid > *:nth-child(1) {
     position: static !important;
     width: 100% !important;
@@ -307,7 +346,6 @@ body {
     grid-column: 1 / -1;
     grid-row: 2;
   }
-  /* Art — top left */
   .worlds-grid > *:nth-child(2) {
     position: static !important;
     width: 100% !important;
@@ -315,7 +353,6 @@ body {
     grid-column: 1;
     grid-row: 1;
   }
-  /* Build — top right */
   .worlds-grid > *:nth-child(3) {
     position: static !important;
     width: 100% !important;
@@ -323,7 +360,6 @@ body {
     grid-column: 2;
     grid-row: 1;
   }
-  /* Ride — bottom left */
   .worlds-grid > *:nth-child(4) {
     position: static !important;
     width: 100% !important;
@@ -331,7 +367,6 @@ body {
     grid-column: 1;
     grid-row: 3;
   }
-  /* Sound — bottom right */
   .worlds-grid > *:nth-child(5) {
     position: static !important;
     width: 100% !important;
@@ -339,12 +374,10 @@ body {
     grid-column: 2;
     grid-row: 3;
   }
-  /* Play — spans both columns, last row - hidden on mobile to keep fit */
   .worlds-grid > *:nth-child(6) {
     display: none;
   }
 
-  /* Inner motion divs need 100% size too */
   .worlds-grid > * > * {
     width: 100% !important;
     height: 100% !important;

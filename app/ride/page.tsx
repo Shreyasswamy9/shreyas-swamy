@@ -89,7 +89,7 @@ export default function RidePage() {
             <div style={{
               position: "absolute", bottom: "1.5rem", left: "1.5rem",
               fontFamily: "var(--font-space-mono)", fontSize: "0.55rem",
-              color: "#2A2A2A", letterSpacing: "0.1em",
+              color: "#9A9A9A", letterSpacing: "0.1em",
             }}>
               [ Ninja 400 / riding photography ]
             </div>
@@ -115,7 +115,7 @@ export default function RidePage() {
                 fontSize: "0.55rem",
                 letterSpacing: "0.2em",
                 textTransform: "uppercase",
-                color: "#2A2A2A",
+                color: "#9A9A9A",
                 marginBottom: "0.75rem",
               }}>
                 {label}

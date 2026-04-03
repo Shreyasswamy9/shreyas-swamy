@@ -115,7 +115,7 @@ export default function ArtPage() {
               <div style={{
                 position: "absolute", bottom: "1.2rem", left: "1.2rem",
                 fontFamily: "var(--font-space-mono)", fontSize: "0.5rem",
-                color: "#2A2A2A", letterSpacing: "0.1em",
+                color: "#9A9A9A", letterSpacing: "0.1em",
               }}>
                 {item.label}
               </div>

@@ -95,7 +95,7 @@ export default function SoundPage() {
               fontSize: "clamp(2rem, 3.5vw, 4.5rem)",
               fontWeight: 300,
               fontStyle: "italic",
-              color: i === 2 ? "#8B5CF6" : "#2A2A2A",
+              color: i === 2 ? "#8B5CF6" : "#F2F0ED",
               lineHeight: 1.3,
               marginBottom: "1rem",
               paddingBottom: "2rem",
@@ -113,7 +113,7 @@ export default function SoundPage() {
           <div style={{
             position: "absolute", bottom: "1.5rem", left: "1.5rem",
             fontFamily: "var(--font-space-mono)", fontSize: "0.55rem",
-            color: "#2A2A2A", letterSpacing: "0.1em",
+            color: "#9A9A9A", letterSpacing: "0.1em",
           }}>
             [ Guitar / music photography ]
           </div>

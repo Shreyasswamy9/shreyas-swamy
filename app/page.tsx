@@ -26,6 +26,7 @@ const WORLDS = [
     accent: "#C8A96E",
     style: { left: "27%", top: "1%", width: "42%", height: "73%" },
     driftDelay: 0,
+    depth: false,
   },
   {
     id: "art",
@@ -36,6 +37,7 @@ const WORLDS = [
     accent: "#F43F5E",
     style: { left: "1%", top: "1%", width: "24%", height: "43%" },
     driftDelay: 0.9,
+    depth: true,
   },
   {
     id: "build",
@@ -46,6 +48,7 @@ const WORLDS = [
     accent: "#4A9EFF",
     style: { left: "72%", top: "1%", width: "27%", height: "43%" },
     driftDelay: 1.3,
+    depth: false,
   },
   {
     id: "ride",
@@ -56,6 +59,7 @@ const WORLDS = [
     accent: "#A0A0A0",
     style: { left: "1%", top: "48%", width: "24%", height: "28%" },
     driftDelay: 1.7,
+    depth: true,
   },
   {
     id: "sound",
@@ -66,6 +70,7 @@ const WORLDS = [
     accent: "#8B5CF6",
     style: { left: "72%", top: "48%", width: "27%", height: "28%" },
     driftDelay: 2.1,
+    depth: true,
   },
   {
     id: "play",
@@ -76,13 +81,13 @@ const WORLDS = [
     accent: "#10B981",
     style: { left: "27%", top: "78%", width: "42%", height: "21%" },
     driftDelay: 2.5,
+    depth: false,
   },
 ]
 
 export default function Home() {
   const [wordIndex, setWordIndex] = useState(0)
   const heroRef = useRef<HTMLElement>(null)
-  const worldsRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -91,14 +96,13 @@ export default function Home() {
     return () => clearInterval(interval)
   }, [])
 
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const letterVariants: any = {
     hidden: { y: "110%", opacity: 0 },
     visible: (i: number) => ({
       y: "0%",
       opacity: 1,
-      transition: { delay: i * 0.042, duration: 0.85, ease: [0.16, 1, 0.3, 1] },
+      transition: { delay: i * 0.042, duration: 0.9, ease: [0.16, 1, 0.3, 1] },
     }),
   }
 
@@ -121,11 +125,27 @@ export default function Home() {
           overflow: "hidden",
         }}
       >
-        {/* Faint grid accent */}
+        {/* Art-layer atmospheric mark — faint diagonal form */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 2, delay: 2 }}
+          transition={{ duration: 3, delay: 1.5 }}
+          style={{
+            position: "absolute",
+            right: 0,
+            top: 0,
+            width: "55%",
+            height: "100%",
+            background: "linear-gradient(135deg, transparent 40%, rgba(200,169,110,0.018) 60%, transparent 80%)",
+            pointerEvents: "none",
+          }}
+        />
+
+        {/* Location / context — top right, barely visible */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 2, delay: 2.2 }}
           style={{
             position: "absolute",
             right: "8vw",
@@ -133,7 +153,7 @@ export default function Home() {
             transform: "translateY(-50%)",
             display: "flex",
             flexDirection: "column",
-            gap: "1.2rem",
+            gap: "1.4rem",
             alignItems: "flex-end",
             pointerEvents: "none",
           }}
@@ -143,9 +163,9 @@ export default function Home() {
               key={i}
               style={{
                 fontFamily: "var(--font-space-mono)",
-                fontSize: "0.55rem",
-                letterSpacing: "0.12em",
-                color: `rgba(242,240,237,${0.06 + i * 0.03})`,
+                fontSize: "0.5rem",
+                letterSpacing: "0.14em",
+                color: `rgba(242,240,237,${0.04 + i * 0.022})`,
                 textTransform: "uppercase",
               }}
             >
@@ -155,7 +175,7 @@ export default function Home() {
         </motion.div>
 
         {/* Name — SHREYAS */}
-        <div style={{ overflow: "hidden", marginBottom: "0.06em" }}>
+        <div style={{ overflow: "hidden", marginBottom: "0.04em" }}>
           <div style={{ display: "flex" }}>
             {"SHREYAS".split("").map((ch, i) => (
               <motion.span
@@ -170,7 +190,7 @@ export default function Home() {
                   fontSize: "clamp(5rem, 11.5vw, 14rem)",
                   fontWeight: 300,
                   lineHeight: 0.88,
-                  letterSpacing: "-0.025em",
+                  letterSpacing: "-0.03em",
                   color: "#F2F0ED",
                   userSelect: "none",
                 }}
@@ -182,7 +202,7 @@ export default function Home() {
         </div>
 
         {/* Name — SWAMY */}
-        <div style={{ overflow: "hidden", marginBottom: "2.8rem" }}>
+        <div style={{ overflow: "hidden", marginBottom: "3rem" }}>
           <div style={{ display: "flex" }}>
             {"SWAMY".split("").map((ch, i) => (
               <motion.span
@@ -197,7 +217,7 @@ export default function Home() {
                   fontSize: "clamp(5rem, 11.5vw, 14rem)",
                   fontWeight: 300,
                   lineHeight: 0.88,
-                  letterSpacing: "-0.025em",
+                  letterSpacing: "-0.03em",
                   color: "#F2F0ED",
                   userSelect: "none",
                 }}
@@ -208,46 +228,46 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Gold divider */}
+        {/* Gold divider — left-anchored, asymmetric */}
         <motion.div
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
-          transition={{ duration: 1.1, delay: 0.85, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 1.2, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
           style={{
-            width: "clamp(100px, 14vw, 200px)",
+            width: "clamp(80px, 10vw, 160px)",
             height: "1px",
             background: "linear-gradient(90deg, #C8A96E, transparent)",
             transformOrigin: "left",
-            marginBottom: "1.8rem",
+            marginBottom: "2rem",
           }}
         />
 
         {/* Identity line + rotating word */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 1, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "1.2rem",
+            gap: "1.4rem",
             flexWrap: "wrap",
           }}
         >
           <span
             style={{
               fontFamily: "var(--font-space-grotesk)",
-              fontSize: "clamp(0.65rem, 1vw, 0.9rem)",
-              letterSpacing: "0.28em",
+              fontSize: "clamp(0.6rem, 0.9vw, 0.82rem)",
+              letterSpacing: "0.3em",
               textTransform: "uppercase",
-              color: "#6B6B6B",
+              color: "#4A4A4A",
               fontWeight: 300,
             }}
           >
             Athlete. Builder. Creative Technologist.
           </span>
 
-          <span style={{ width: "1px", height: "0.9rem", background: "#2A2A2A", flexShrink: 0 }} />
+          <span style={{ width: "1px", height: "0.8rem", background: "#222222", flexShrink: 0 }} />
 
           <div style={{ height: "1.5em", overflow: "hidden", position: "relative", minWidth: "14ch" }}>
             <AnimatePresence mode="wait">
@@ -256,12 +276,12 @@ export default function Home() {
                 initial={{ y: "100%", opacity: 0 }}
                 animate={{ y: "0%", opacity: 1 }}
                 exit={{ y: "-110%", opacity: 0 }}
-                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
                 style={{
                   display: "block",
                   fontFamily: "var(--font-space-mono)",
-                  fontSize: "clamp(0.55rem, 0.8vw, 0.72rem)",
-                  letterSpacing: "0.16em",
+                  fontSize: "clamp(0.5rem, 0.75vw, 0.68rem)",
+                  letterSpacing: "0.18em",
                   textTransform: "uppercase",
                   color: "#C8A96E",
                   whiteSpace: "nowrap",
@@ -273,11 +293,11 @@ export default function Home() {
           </div>
         </motion.div>
 
-        {/* Bottom row */}
+        {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 1.9 }}
+          transition={{ duration: 0.8, delay: 2.2 }}
           style={{
             position: "absolute",
             bottom: "2.5rem",
@@ -292,10 +312,10 @@ export default function Home() {
           <span
             style={{
               fontFamily: "var(--font-space-mono)",
-              fontSize: "0.5rem",
-              letterSpacing: "0.25em",
+              fontSize: "0.45rem",
+              letterSpacing: "0.28em",
               textTransform: "uppercase",
-              color: "#2A2A2A",
+              color: "#202020",
             }}
           >
             Scroll
@@ -303,17 +323,16 @@ export default function Home() {
           <div
             style={{
               width: "1px",
-              height: "3.5rem",
-              background: "linear-gradient(to bottom, #2A2A2A, transparent)",
-              animation: "scrollPulse 1.6s ease-in-out infinite",
+              height: "3rem",
+              background: "linear-gradient(to bottom, #202020, transparent)",
+              animation: "scrollPulse 1.8s ease-in-out infinite",
             }}
           />
         </motion.div>
       </section>
 
-      {/* ─── WORLDS SECTION (snap target) ────── */}
+      {/* ─── WORLDS — sculptural composition ────── */}
       <section
-        ref={worldsRef}
         style={{
           width: "100vw",
           height: "100dvh",
@@ -323,14 +342,14 @@ export default function Home() {
           padding: "0 3vw",
         }}
       >
-        {/* Section label row */}
+        {/* Section label — minimal, editorial */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 1.2 }}
           style={{
-            padding: "1.4rem 5vw 1rem",
+            padding: "1.6rem 5vw 1rem",
             display: "flex",
             alignItems: "center",
             gap: "2rem",
@@ -340,10 +359,10 @@ export default function Home() {
           <div
             style={{
               fontFamily: "var(--font-space-mono)",
-              fontSize: "0.52rem",
-              letterSpacing: "0.25em",
+              fontSize: "0.48rem",
+              letterSpacing: "0.28em",
               textTransform: "uppercase",
-              color: "#2A2A2A",
+              color: "#9A9A9A",
               whiteSpace: "nowrap",
             }}
           >
@@ -353,12 +372,12 @@ export default function Home() {
             style={{
               flex: 1,
               height: "1px",
-              background: "linear-gradient(90deg, #1A1A1A, transparent)",
+              background: "linear-gradient(90deg, #161616, transparent)",
             }}
           />
         </motion.div>
 
-        {/* Worlds grid — fills remaining height */}
+        {/* The composition — worlds are planes, not cards */}
         <div
           className="worlds-grid"
           style={{
@@ -367,6 +386,54 @@ export default function Home() {
             width: "100%",
           }}
         >
+          {/* Ghost WEIGHT text — art layer beneath everything */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 2.5, delay: 0.5 }}
+            style={{
+              position: "absolute",
+              right: "-4%",
+              bottom: "-12%",
+              fontFamily: "var(--font-cormorant)",
+              fontSize: "clamp(18rem, 38vw, 52rem)",
+              fontWeight: 300,
+              letterSpacing: "-0.06em",
+              lineHeight: 0.8,
+              color: "rgba(242,240,237,0.028)",
+              userSelect: "none",
+              pointerEvents: "none",
+              zIndex: 0,
+              whiteSpace: "nowrap",
+            }}
+          >
+            WEIGHT
+          </motion.div>
+
+          {/* Ambient floating coordinate — art world residue */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.5, delay: 1.5 }}
+            style={{
+              position: "absolute",
+              right: "3.5vw",
+              bottom: "2rem",
+              fontFamily: "var(--font-space-mono)",
+              fontSize: "0.42rem",
+              color: "rgba(242,240,237,0.05)",
+              letterSpacing: "0.1em",
+              userSelect: "none",
+              pointerEvents: "none",
+              zIndex: 10,
+            }}
+          >
+            40.7128{"\u00B0"} N &nbsp;/&nbsp; 74.0060{"\u00B0"} W
+          </motion.div>
+
+          {/* Fragments — layer over ghost text */}
           {WORLDS.map((world, i) => (
             <WorldFragment key={world.id} index={i} {...world} />
           ))}
@@ -378,8 +445,8 @@ export default function Home() {
         <div
           style={{
             height: "1px",
-            background: "linear-gradient(90deg, transparent, #1A1A1A 30%, #1A1A1A 70%, transparent)",
-            marginBottom: "3rem",
+            background: "linear-gradient(90deg, transparent, #131313 30%, #131313 70%, transparent)",
+            marginBottom: "3.5rem",
           }}
         />
 
@@ -398,10 +465,10 @@ export default function Home() {
                 fontFamily: "var(--font-cormorant)",
                 fontSize: "clamp(2rem, 4vw, 4rem)",
                 fontWeight: 300,
-                color: "#1A1A1A",
+                color: "#141414",
                 lineHeight: 1,
-                letterSpacing: "-0.01em",
-                marginBottom: "0.6rem",
+                letterSpacing: "-0.02em",
+                marginBottom: "0.7rem",
               }}
             >
               Shreyas Swamy
@@ -409,10 +476,10 @@ export default function Home() {
             <div
               style={{
                 fontFamily: "var(--font-space-mono)",
-                fontSize: "0.52rem",
-                letterSpacing: "0.18em",
+                fontSize: "0.48rem",
+                letterSpacing: "0.2em",
                 textTransform: "uppercase",
-                color: "#2A2A2A",
+                color: "#9A9A9A",
               }}
             >
               New York City &nbsp;/&nbsp; 2026
@@ -427,15 +494,15 @@ export default function Home() {
                 data-hover
                 style={{
                   fontFamily: "var(--font-space-mono)",
-                  fontSize: "0.58rem",
-                  letterSpacing: "0.15em",
+                  fontSize: "0.52rem",
+                  letterSpacing: "0.18em",
                   textTransform: "uppercase",
-                  color: "#2A2A2A",
+                  color: "#9A9A9A",
                   textDecoration: "none",
-                  transition: "color 0.25s ease",
+                  transition: "color 0.3s ease",
                 }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = "#6B6B6B" }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = "#2A2A2A" }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = "#F2F0ED" }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = "#9A9A9A" }}
               >
                 {link}
               </a>

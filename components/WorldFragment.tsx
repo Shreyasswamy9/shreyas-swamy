@@ -14,10 +14,11 @@ interface WorldFragmentProps {
   index: number
   style: React.CSSProperties
   driftDelay?: number
+  depth?: boolean
 }
 
-const STRENGTH = 16
-const RADIUS = 200
+const STRENGTH = 14
+const RADIUS = 220
 
 export default function WorldFragment({
   id,
@@ -29,16 +30,16 @@ export default function WorldFragment({
   index,
   style,
   driftDelay = 0,
+  depth = false,
 }: WorldFragmentProps) {
   const cardRef = useRef<HTMLDivElement>(null)
   const [magnetActive, setMagnetActive] = useState(false)
 
   const magX = useMotionValue(0)
   const magY = useMotionValue(0)
-  const smoothX = useSpring(magX, { stiffness: 160, damping: 28, mass: 0.6 })
-  const smoothY = useSpring(magY, { stiffness: 160, damping: 28, mass: 0.6 })
+  const smoothX = useSpring(magX, { stiffness: 140, damping: 32, mass: 0.7 })
+  const smoothY = useSpring(magY, { stiffness: 140, damping: 32, mass: 0.7 })
 
-  // Proper single-RAF throttle for magnetic effect
   const rafRef = useRef<number | null>(null)
   const pendingEvent = useRef<{ x: number; y: number } | null>(null)
 
@@ -92,9 +93,9 @@ export default function WorldFragment({
   const driftDur = 4 + index * 0.7
 
   return (
-    // Outer wrapper: CSS drift animation runs entirely on compositor thread
     <div
       ref={cardRef}
+      className={depth ? "fragment-depth" : undefined}
       style={{
         ...style,
         position: "absolute",
@@ -105,12 +106,11 @@ export default function WorldFragment({
         animationIterationCount: "infinite",
         animationDirection: "alternate",
         "--drift-y": isDominant ? "-3px" : "-6px",
-        "--drift-r": isDominant ? "0.1deg" : "0.3deg",
+        "--drift-r": isDominant ? "0.08deg" : `${0.2 + index * 0.08}deg`,
       } as React.CSSProperties}
       onMouseEnter={() => setMagnetActive(true)}
       onMouseLeave={() => setMagnetActive(false)}
     >
-      {/* Middle: entry animation + magnetic spring — only 2 motion values */}
       <motion.div
         style={{
           x: smoothX,
@@ -119,67 +119,74 @@ export default function WorldFragment({
           height: "100%",
           willChange: "transform",
         }}
-        initial={{ opacity: 0, scale: 0.96 }}
+        initial={{ opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, delay: 0.3 + index * 0.11, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 1, delay: 0.4 + index * 0.13, ease: [0.16, 1, 0.3, 1] }}
       >
         <Link
           href={href}
           style={{ display: "block", width: "100%", height: "100%", textDecoration: "none" }}
           data-hover
         >
-          {/* All hover effects handled by CSS :hover — zero JS per frame */}
           <div
             className="fragment-card"
-            style={{ "--accent-wash": `${accent}14` } as React.CSSProperties}
+            data-dominant={isDominant ? "true" : undefined}
           >
-            {/* Shimmer placeholder */}
+            {/* Image plane — fills card entirely */}
             <div className="fragment-shimmer img-placeholder" />
 
-            {/* Accent color wash */}
+            {/* Accent color atmosphere */}
             <div
               className="fragment-accent-wash"
               style={{
-                background: `radial-gradient(ellipse at 70% 80%, ${accent}14 0%, transparent 65%)`,
+                background: isDominant
+                  ? `radial-gradient(ellipse at 60% 90%, ${accent}1A 0%, transparent 60%)`
+                  : `radial-gradient(ellipse at 70% 80%, ${accent}10 0%, transparent 65%)`,
               }}
             />
 
-            {/* Bottom content */}
+            {/* Football: top gold slash */}
+            {isDominant && <div className="fragment-gold-slash" />}
+
+            {/* Bottom content — text floats on gradient */}
             <div
               style={{
                 position: "absolute",
                 bottom: 0,
                 left: 0,
                 right: 0,
-                padding: isDominant ? "2rem" : "1.4rem",
-                background: "linear-gradient(to top, rgba(6,6,6,0.96) 0%, rgba(6,6,6,0.5) 60%, transparent 100%)",
+                padding: isDominant ? "2.5rem" : "1.4rem",
+                background: isDominant
+                  ? "linear-gradient(to top, rgba(6,6,6,0.98) 0%, rgba(6,6,6,0.6) 55%, transparent 100%)"
+                  : "linear-gradient(to top, rgba(6,6,6,0.95) 0%, rgba(6,6,6,0.45) 60%, transparent 100%)",
               }}
             >
               <div
                 className="fragment-sublabel"
                 style={{
                   fontFamily: "var(--font-space-mono)",
-                  fontSize: "0.52rem",
-                  letterSpacing: "0.2em",
+                  fontSize: "0.48rem",
+                  letterSpacing: "0.22em",
                   textTransform: "uppercase",
                   color: accent,
-                  marginBottom: "0.5rem",
+                  marginBottom: isDominant ? "0.7rem" : "0.5rem",
                 }}
               >
                 {sublabel}
               </div>
 
               <div
+                className="fragment-label"
                 style={{
                   fontFamily: "var(--font-cormorant)",
                   fontSize: isDominant
-                    ? "clamp(2.8rem, 4.5vw, 5.5rem)"
-                    : "clamp(1.8rem, 2.8vw, 3.5rem)",
+                    ? "clamp(3rem, 5vw, 6.5rem)"
+                    : "clamp(1.6rem, 2.6vw, 3.2rem)",
                   fontWeight: 300,
-                  letterSpacing: isDominant ? "-0.025em" : "-0.01em",
+                  letterSpacing: isDominant ? "-0.03em" : "-0.015em",
                   color: "#F2F0ED",
-                  lineHeight: 0.95,
-                  marginBottom: "0.8rem",
+                  lineHeight: 0.92,
+                  marginBottom: "0.9rem",
                 }}
               >
                 {label}
@@ -189,25 +196,26 @@ export default function WorldFragment({
                 className="fragment-description"
                 style={{
                   fontFamily: "var(--font-space-grotesk)",
-                  fontSize: "0.72rem",
-                  color: "#6B6B6B",
-                  lineHeight: 1.5,
-                  maxWidth: "22ch",
+                  fontSize: isDominant ? "0.78rem" : "0.68rem",
+                  color: "#5A5A5A",
+                  lineHeight: 1.55,
+                  maxWidth: isDominant ? "28ch" : "22ch",
+                  letterSpacing: "0.01em",
                 }}
               >
                 {description}
               </div>
             </div>
 
-            {/* Index marker */}
+            {/* Index marker — very faint */}
             <div
               style={{
                 position: "absolute",
                 top: "1rem",
                 right: "1rem",
                 fontFamily: "var(--font-space-mono)",
-                fontSize: "0.5rem",
-                color: "#1E1E1E",
+                fontSize: "0.45rem",
+                color: "#161616",
                 letterSpacing: "0.05em",
               }}
             >
@@ -215,7 +223,7 @@ export default function WorldFragment({
             </div>
 
             {/* Bottom accent line */}
-            <div className="fragment-accent-line" style={{ background: accent }} />
+            {!isDominant && <div className="fragment-accent-line" style={{ background: accent }} />}
           </div>
         </Link>
       </motion.div>

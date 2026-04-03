@@ -25,7 +25,7 @@ export default function NotFound() {
           fontSize: "0.6rem",
           letterSpacing: "0.2em",
           textTransform: "uppercase",
-          color: "#2A2A2A",
+          color: "#9A9A9A",
           marginBottom: "1.5rem",
         }}
       >
