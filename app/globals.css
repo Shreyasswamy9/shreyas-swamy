@@ -38,6 +38,21 @@ body {
   font-family: var(--font-space-grotesk), system-ui, sans-serif;
 }
 
+/* Force custom cursor on all interactive elements */
+a, button, input, textarea, select, [role="button"], [data-hover] {
+  cursor: none !important;
+}
+
+/* Also catch elements with cursor pointer */
+*[style*="cursor"] {
+  cursor: none !important;
+}
+
+/* Links, buttons, and clickable elements */
+a:hover, button:hover, input:hover, [role="button"]:hover, [data-hover]:hover {
+  cursor: none !important;
+}
+
 /* ─── CUSTOM CURSOR ─────────────────────────────────────────── */
 .cursor-dot {
   position: fixed;
@@ -76,6 +91,20 @@ body {
 .font-sans  { font-family: var(--font-space-grotesk), system-ui, sans-serif; }
 .font-mono  { font-family: var(--font-space-mono), monospace; }
 
+/* ─── CINEMATIC VIGNETTE ─────────────────────────────────────── */
+.cinematic-vignette {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    transparent 38%,
+    rgba(6,6,6,0.28) 68%,
+    rgba(6,6,6,0.52) 100%
+  );
+  pointer-events: none;
+  z-index: 9988;
+}
+
 /* ─── NOISE / GRAIN ─────────────────────────────────────────── */
 .noise-overlay {
   position: fixed;
@@ -83,7 +112,7 @@ body {
   width: calc(100% + 120px);
   height: calc(100% + 120px);
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-  opacity: 0.038;
+  opacity: 0.05;
   pointer-events: none;
   z-index: 9990;
   animation: grainAnim 0.5s steps(1) infinite;
@@ -178,6 +207,12 @@ body {
   50% { clip-path: inset(80% 0 2% 0);  transform: translateX(1px); }
   75% { clip-path: inset(25% 0 60% 0); transform: translateX(-1px); }
   100%{ clip-path: inset(0 0 100% 0);  opacity: 0; }
+}
+
+/* ─── FOOTBALL GLOW PULSE ───────────────────────────────────── */
+@keyframes footballPulse {
+  0%, 100% { opacity: 0.55; }
+  50%       { opacity: 1; }
 }
 
 /* ─── CARD DRIFT (CSS, compositor thread) ────────────────────── */

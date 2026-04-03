@@ -2,15 +2,17 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { WorldPageEntry } from "@/components/WorldPageEntry"
 
 const STATEMENTS = [
-  "Art is the hidden operating system.",
+  "This is the hidden operating system.",
   "Not decoration. Infrastructure.",
-  "Every other world runs on this one.",
+  "Everything else runs on this.",
 ]
 
 export default function ArtPage() {
   return (
+    <WorldPageEntry world="art">
     <div style={{ minHeight: "100vh", background: "#060606", color: "#F2F0ED" }}>
       <Link href="/" className="world-back-btn" data-hover>
         <span>←</span><span>Back</span>
@@ -82,7 +84,7 @@ export default function ArtPage() {
             maxWidth: "60ch",
           }}
         >
-          {"The visual sense that makes a product feel right, a layout breathe, a system feel intentional \u2014 that\u2019s not learned in a CS degree. It lives somewhere else. This is where."}
+          {"The instinct that makes a product feel right \u2014 that\u2019s not in a CS degree. I have it. This is where it lives."}
         </motion.p>
       </section>
 
@@ -137,5 +139,6 @@ export default function ArtPage() {
         </Link>
       </div>
     </div>
+    </WorldPageEntry>
   )
 }

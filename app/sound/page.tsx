@@ -2,15 +2,17 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { WorldPageEntry } from "@/components/WorldPageEntry"
 
 const LINES = [
   "Guitar, late at night.",
-  "Voice finding what words can't hold.",
-  "Chords that resolve into something true.",
+  "My voice finding what words can't hold.",
+  "Chords that land somewhere true.",
 ]
 
 export default function SoundPage() {
   return (
+    <WorldPageEntry world="sound">
     <div style={{ minHeight: "100vh", background: "#060606", color: "#F2F0ED" }}>
       <Link href="/" className="world-back-btn" data-hover>
         <span>←</span><span>Back</span>
@@ -78,7 +80,7 @@ export default function SoundPage() {
             lineHeight: 1.7,
           }}
         >
-          {"Not performed. Just played. The quietest world, and maybe the most honest."}
+          {"Not performed. Just played. The quietest thing I do."}
         </motion.p>
       </section>
 
@@ -133,5 +135,6 @@ export default function SoundPage() {
         </Link>
       </div>
     </div>
+    </WorldPageEntry>
   )
 }

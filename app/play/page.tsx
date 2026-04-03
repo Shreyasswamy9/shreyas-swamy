@@ -2,9 +2,11 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { WorldPageEntry } from "@/components/WorldPageEntry"
 
 export default function PlayPage() {
   return (
+    <WorldPageEntry world="play">
     <div style={{ minHeight: "100vh", background: "#060606", color: "#F2F0ED" }}>
       <Link href="/" className="world-back-btn" data-hover>
         <span>←</span><span>Back</span>
@@ -72,7 +74,7 @@ export default function PlayPage() {
             lineHeight: 1.7,
           }}
         >
-          {"Competition doesn\u2019t require a pitch. Strategy, reflexes, systems thinking \u2014 the same instincts, different terrain."}
+          {"Competition doesn\u2019t require a pitch. Same instincts. Different terrain."}
         </motion.p>
       </section>
 
@@ -80,15 +82,15 @@ export default function PlayPage() {
         {[
           {
             label: "Strategy",
-            body: "Games as pattern recognition — reading the opponent, adapting the system, finding the edge.",
+            body: "I read the opponent. Adapt the system. Find the edge.",
           },
           {
             label: "Immersion",
-            body: "Worlds built with as much intentionality as any architecture. The craft behind them is real.",
+            body: "These worlds are built with as much craft as any architecture. I respect that.",
           },
           {
             label: "Competition",
-            body: "The drive to improve at something difficult doesn't turn off. It just changes environments.",
+            body: "The drive to improve doesn't turn off. It just changes environments.",
           },
         ].map((item, i) => (
           <motion.div
@@ -140,5 +142,6 @@ export default function PlayPage() {
         </Link>
       </div>
     </div>
+    </WorldPageEntry>
   )
 }

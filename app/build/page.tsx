@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { WorldPageEntry } from "@/components/WorldPageEntry"
 
 const STACK = [
   { name: "Next.js", category: "Framework" },
@@ -19,24 +20,25 @@ const DISCIPLINES = [
     code: "CS",
     title: "Computer Science",
     body:
-      "Systems, algorithms, data structures \u2014 the underlying language of every product built. Currently at Fordham University.",
+      "Systems, algorithms, data structures. The language everything runs on. Fordham University.",
   },
   {
     code: "SEC",
     title: "Cybersecurity",
     body:
-      "Understanding how systems break is the first step to building ones that don\u2019t. Attack surfaces, threat modeling, secure architecture.",
+      "I learn how systems break. Then I build ones that don\u2019t. Attack surfaces, threat modeling, secure architecture.",
   },
   {
     code: "BIZ",
     title: "Business Administration",
     body:
-      "Engineering without economic awareness builds for no one. Product thinking, go-to-market, and why things actually get adopted.",
+      "I don\u2019t just build. I understand why things get adopted.",
   },
 ]
 
 export default function BuildPage() {
   return (
+    <WorldPageEntry world="build">
     <div style={{ minHeight: "100vh", background: "#060606", color: "#F2F0ED" }}>
       <Link href="/" className="world-back-btn" data-hover>
         <span>{"←"}</span>
@@ -138,7 +140,7 @@ export default function BuildPage() {
             letterSpacing: "0.01em",
           }}
         >
-          {"At Fruitstand, built the entire ecommerce platform from scratch \u2014 frontend, backend, payments, logistics, analytics. Every layer. Solo."}
+          {"At Fruitstand, I built the entire ecommerce platform from scratch. Frontend, backend, payments, logistics, analytics. Every layer. Solo."}
         </motion.p>
       </section>
 
@@ -185,7 +187,7 @@ export default function BuildPage() {
             maxWidth: "18ch",
           }}
         >
-          {"A fashion brand\u2019s"}
+          {"I built their"}
           <br />
           <em style={{ color: "#4A9EFF", fontStyle: "italic" }}>{"full digital spine."}</em>
         </motion.h2>
@@ -248,7 +250,7 @@ export default function BuildPage() {
                 letterSpacing: "0.01em",
               }}
             >
-              {"Built the complete ecommerce platform \u2014 from product catalog and checkout flows to order management, shipping integration, and the admin panel used by the team daily."}
+              {"I built the complete platform. Product catalog, checkout, order management, shipping integration, and the admin panel the team uses daily."}
             </motion.p>
 
             {/* Pull statement */}
@@ -506,5 +508,6 @@ export default function BuildPage() {
         </Link>
       </div>
     </div>
+    </WorldPageEntry>
   )
 }

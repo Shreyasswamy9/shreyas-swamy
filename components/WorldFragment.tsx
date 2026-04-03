@@ -1,8 +1,8 @@
 "use client"
 
 import { useRef, useState, useCallback, useEffect } from "react"
-import { motion, useMotionValue, useSpring } from "framer-motion"
-import Link from "next/link"
+import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion"
+import { usePageTransition, WorldName } from "./TransitionProvider"
 
 interface WorldFragmentProps {
   id: string
@@ -34,6 +34,9 @@ export default function WorldFragment({
 }: WorldFragmentProps) {
   const cardRef = useRef<HTMLDivElement>(null)
   const [magnetActive, setMagnetActive] = useState(false)
+
+  const { triggerTransition, phase, activeWorld } = usePageTransition()
+  const isDimmed = phase !== "idle" && id !== activeWorld
 
   const magX = useMotionValue(0)
   const magY = useMotionValue(0)
@@ -89,6 +92,13 @@ export default function WorldFragment({
     }
   }, [magnetActive, onWindowMouseMove, magX, magY])
 
+  const handleClick = useCallback(() => {
+    if (phase !== "idle") return
+    const rect = cardRef.current?.getBoundingClientRect()
+    if (!rect) return
+    triggerTransition({ rect, color: accent, world: id as WorldName, href })
+  }, [phase, accent, id, href, triggerTransition])
+
   const isDominant = id === "football"
   const driftDur = 4 + index * 0.7
 
@@ -123,9 +133,18 @@ export default function WorldFragment({
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1, delay: 0.4 + index * 0.13, ease: [0.16, 1, 0.3, 1] }}
       >
-        <Link
-          href={href}
-          style={{ display: "block", width: "100%", height: "100%", textDecoration: "none" }}
+        <div
+          role="link"
+          tabIndex={0}
+          onClick={handleClick}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleClick() }}
+          style={{
+            display: "block",
+            width: "100%",
+            height: "100%",
+            textDecoration: "none",
+            cursor: "none",
+          }}
           data-hover
         >
           <div
@@ -144,6 +163,19 @@ export default function WorldFragment({
                   : `radial-gradient(ellipse at 70% 80%, ${accent}10 0%, transparent 65%)`,
               }}
             />
+
+            {/* Football gravitational glow — breathing warmth from below */}
+            {isDominant && (
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background: "radial-gradient(ellipse at 50% 95%, rgba(200,169,110,0.24) 0%, rgba(200,169,110,0.1) 32%, transparent 65%)",
+                  pointerEvents: "none",
+                  animation: "footballPulse 3.8s ease-in-out infinite",
+                }}
+              />
+            )}
 
             {/* Football: top gold slash */}
             {isDominant && <div className="fragment-gold-slash" />}
@@ -224,8 +256,31 @@ export default function WorldFragment({
 
             {/* Bottom accent line */}
             {!isDominant && <div className="fragment-accent-line" style={{ background: accent }} />}
+
+            {/* Dim overlay — fades in when another world is being entered */}
+            <AnimatePresence>
+              {isDimmed && (
+                <motion.div
+                  key="dim"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    background: "rgba(6,6,6,0.68)",
+                    backdropFilter: "blur(3px)",
+                    WebkitBackdropFilter: "blur(3px)",
+                    zIndex: 4,
+                    pointerEvents: "none",
+                    borderRadius: "inherit",
+                  }}
+                />
+              )}
+            </AnimatePresence>
           </div>
-        </Link>
+        </div>
       </motion.div>
     </div>
   )

@@ -2,9 +2,11 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { WorldPageEntry } from "@/components/WorldPageEntry"
 
 export default function RidePage() {
   return (
+    <WorldPageEntry world="ride">
     <div style={{ minHeight: "100vh", background: "#060606", color: "#F2F0ED" }}>
       <Link href="/" className="world-back-btn" data-hover>
         <span>←</span><span>Back</span>
@@ -72,7 +74,7 @@ export default function RidePage() {
             lineHeight: 1.7,
           }}
         >
-          {"A Kawasaki Ninja 400. New York traffic. The only place where speed and stillness coexist."}
+          {"A Kawasaki Ninja 400. New York traffic. Speed and stillness at once."}
         </motion.p>
       </section>
 
@@ -146,5 +148,6 @@ export default function RidePage() {
         </Link>
       </div>
     </div>
+    </WorldPageEntry>
   )
 }

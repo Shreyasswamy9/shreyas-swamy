@@ -1,37 +1,38 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, useScroll, useTransform } from "framer-motion"
 import Link from "next/link"
+import { WorldPageEntry } from "@/components/WorldPageEntry"
 
 const TIMELINE = [
   {
     year: "2014",
     label: "Origin",
-    text: "Bangalore, India. Joined Alchemy International Football Club. Not a decision. An obsession that started early.",
+    text: "Bangalore. I joined Alchemy International Football Club. Not a decision. An obsession.",
     offset: "0",
   },
   {
     year: "2022",
     label: "Scholarship",
-    text: "Seven years of training converted into something real. Earned a scholarship to play D2 at Mercyhurst University, Erie PA.",
+    text: "Seven years of training. I earned a scholarship to play D2 at Mercyhurst, Erie PA.",
     offset: "8vw",
   },
   {
     year: "2024",
     label: "Fracture",
-    text: "ACL. Meniscus. Cyclops lesion. Two surgeries. Then appendicitis — a third surgery, unrelated, unwanted. Three operations in six months.",
+    text: "ACL. Meniscus. Cyclops lesion. Two surgeries. Then appendicitis. Three operations in six months.",
     offset: "4vw",
   },
   {
     year: "2024",
     label: "Fordham",
-    text: "Transferred to Fordham University, New York. Last two years. Different city, different campus. Same obsession.",
+    text: "I transferred to Fordham, New York. Different city. Same obsession.",
     offset: "12vw",
   },
   {
     year: "Now",
     label: "Comeback",
-    text: "Playing for Manhattan Celtics. Every session is earned. Nothing is given back. The story is still being written.",
+    text: "Playing for Manhattan Celtics. Every session is earned. Nothing is given back.",
     offset: "0",
   },
 ]
@@ -44,7 +45,14 @@ const STATS = [
 ]
 
 export default function FootballPage() {
+  const { scrollY } = useScroll()
+  // Parallax: background lags behind scroll (appears further away)
+  const bgY = useTransform(scrollY, [0, 700], ["0%", "22%"])
+  const bgScale = useTransform(scrollY, [0, 700], [1.04, 1.1])
+  const ghostTextY = useTransform(scrollY, [0, 700], ["0%", "10%"])
+
   return (
+    <WorldPageEntry world="football">
     <div
       style={{
         minHeight: "100vh",
@@ -70,13 +78,17 @@ export default function FootballPage() {
           overflow: "hidden",
         }}
       >
-        {/* Background image — full bleed, masked */}
-        <div
+        {/* Background image — full bleed, parallax establishing shot */}
+        <motion.div
           className="img-placeholder"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.3 }}
+          transition={{ duration: 2.5, ease: [0.16, 1, 0.3, 1] }}
           style={{
             position: "absolute",
             inset: 0,
-            opacity: 0.18,
+            y: bgY,
+            scale: bgScale,
             maskImage: "linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.3) 100%)",
             WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.3) 100%)",
           }}
@@ -90,12 +102,12 @@ export default function FootballPage() {
           style={{
             position: "absolute",
             inset: 0,
-            background: "linear-gradient(145deg, transparent 50%, rgba(200,169,110,0.04) 70%, transparent 90%)",
+            background: "linear-gradient(145deg, transparent 45%, rgba(200,169,110,0.07) 68%, transparent 90%)",
             pointerEvents: "none",
           }}
         />
 
-        {/* Ghost FOOTBALL — underpainting */}
+        {/* Ghost FOOTBALL — underpainting, on its own depth plane */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -107,12 +119,13 @@ export default function FootballPage() {
             fontFamily: "var(--font-cormorant)",
             fontSize: "clamp(14rem, 30vw, 40rem)",
             fontWeight: 300,
-            color: "rgba(200,169,110,0.03)",
+            color: "rgba(200,169,110,0.055)",
             letterSpacing: "-0.05em",
             lineHeight: 0.85,
             userSelect: "none",
             pointerEvents: "none",
             whiteSpace: "nowrap",
+            y: ghostTextY,
           }}
         >
           FOOTBALL
@@ -167,9 +180,9 @@ export default function FootballPage() {
               marginBottom: "2.5rem",
             }}
           >
-            The Center
+            This Is
             <br />
-            <em style={{ fontStyle: "italic", color: "#C8A96E" }}>of Gravity</em>
+            <em style={{ fontStyle: "italic", color: "#C8A96E" }}>Everything.</em>
           </motion.h1>
         </div>
 
@@ -188,7 +201,7 @@ export default function FootballPage() {
             letterSpacing: "0.01em",
           }}
         >
-          {"From Bangalore to Mercyhurst to Fordham to Manhattan \u2014 football is not what Shreyas does. It is what holds everything else together."}
+          {"From Bangalore to Mercyhurst to Fordham to Manhattan. Football is not what I do. It\u2019s what holds everything together."}
         </motion.p>
       </section>
 
@@ -459,9 +472,9 @@ export default function FootballPage() {
           >
             Three surgeries in six months.
             <br />
-            <em style={{ color: "#9A9A9A" }}>The comeback is not a story.</em>
+            <em style={{ color: "#9A9A9A" }}>This is not a story.</em>
             <br />
-            It is still happening.
+            It{"'"}s still happening.
           </p>
         </motion.blockquote>
       </section>
@@ -503,5 +516,6 @@ export default function FootballPage() {
         </Link>
       </div>
     </div>
+    </WorldPageEntry>
   )
 }

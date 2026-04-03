@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import { useEffect, useRef, useState } from "react"
 import Nav from "@/components/Nav"
 import WorldFragment from "@/components/WorldFragment"
@@ -20,8 +20,8 @@ const WORLDS = [
   {
     id: "football",
     label: "Football",
-    sublabel: "The center of gravity",
-    description: "Seven years. One scholarship. Three surgeries. Still rising.",
+    sublabel: "This is everything.",
+    description: "Seven years. One scholarship. Three surgeries. Still here.",
     href: "/football",
     accent: "#C8A96E",
     style: { left: "27%", top: "1%", width: "42%", height: "73%" },
@@ -31,8 +31,8 @@ const WORLDS = [
   {
     id: "art",
     label: "Art",
-    sublabel: "The hidden layer",
-    description: "The instinct beneath everything else.",
+    sublabel: "This is how I see things.",
+    description: "It runs under everything.",
     href: "/art",
     accent: "#F43F5E",
     style: { left: "1%", top: "1%", width: "24%", height: "43%" },
@@ -43,7 +43,7 @@ const WORLDS = [
     id: "build",
     label: "Build",
     sublabel: "CS \u00B7 Cybersecurity \u00B7 Ecommerce",
-    description: "Engineering systems that actually work.",
+    description: "I build systems that don't break.",
     href: "/build",
     accent: "#4A9EFF",
     style: { left: "72%", top: "1%", width: "27%", height: "43%" },
@@ -54,7 +54,7 @@ const WORLDS = [
     id: "ride",
     label: "Ride",
     sublabel: "Ninja 400 \u00B7 Speed \u00B7 Control",
-    description: "Metal, momentum, managed silence.",
+    description: "Speed. Silence. Mine.",
     href: "/ride",
     accent: "#A0A0A0",
     style: { left: "1%", top: "48%", width: "24%", height: "28%" },
@@ -65,7 +65,7 @@ const WORLDS = [
     id: "sound",
     label: "Sound",
     sublabel: "Guitar \u00B7 Voice",
-    description: "Late night. Minor chords. Real.",
+    description: "Late night. Minor chords. Just me.",
     href: "/sound",
     accent: "#8B5CF6",
     style: { left: "72%", top: "48%", width: "27%", height: "28%" },
@@ -76,7 +76,7 @@ const WORLDS = [
     id: "play",
     label: "Play",
     sublabel: "Games \u00B7 Strategy \u00B7 Immersion",
-    description: "Competition in digital worlds.",
+    description: "Same instincts. Different terrain.",
     href: "/play",
     accent: "#10B981",
     style: { left: "27%", top: "78%", width: "42%", height: "21%" },
@@ -88,6 +88,10 @@ const WORLDS = [
 export default function Home() {
   const [wordIndex, setWordIndex] = useState(0)
   const heroRef = useRef<HTMLElement>(null)
+  const { scrollY } = useScroll()
+  // Depth plane parallax — background moves slower than foreground (depth illusion)
+  const portraitY = useTransform(scrollY, [0, 700], ["0%", "16%"])
+  const weightY = useTransform(scrollY, [300, 1400], ["0%", "-6%"])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -125,7 +129,45 @@ export default function Home() {
           overflow: "hidden",
         }}
       >
-        {/* Art-layer atmospheric mark — faint diagonal form */}
+        {/* Portrait depth plane — rear cinematic image field, moves at different depth */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 3.2, delay: 0.3 }}
+          style={{
+            position: "absolute",
+            right: "-6%",
+            top: "-8%",
+            width: "58%",
+            height: "116%",
+            y: portraitY,
+            pointerEvents: "none",
+            zIndex: 0,
+          }}
+        >
+          {/* Image placeholder — replace with hero portrait */}
+          <div
+            className="img-placeholder"
+            style={{
+              position: "absolute",
+              inset: 0,
+              opacity: 0.11,
+              maskImage: "linear-gradient(to left, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.45) 50%, transparent 90%)",
+              WebkitMaskImage: "linear-gradient(to left, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.45) 50%, transparent 90%)",
+            }}
+          />
+          {/* Gold atmospheric wash over the portrait plane */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(145deg, transparent 20%, rgba(200,169,110,0.06) 58%, transparent 88%)",
+              pointerEvents: "none",
+            }}
+          />
+        </motion.div>
+
+        {/* Art-layer atmospheric mark — diagonal presence */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -136,7 +178,7 @@ export default function Home() {
             top: 0,
             width: "55%",
             height: "100%",
-            background: "linear-gradient(135deg, transparent 40%, rgba(200,169,110,0.018) 60%, transparent 80%)",
+            background: "linear-gradient(135deg, transparent 35%, rgba(200,169,110,0.045) 58%, transparent 80%)",
             pointerEvents: "none",
           }}
         />
@@ -187,10 +229,10 @@ export default function Home() {
                 style={{
                   display: "block",
                   fontFamily: "var(--font-cormorant)",
-                  fontSize: "clamp(5rem, 11.5vw, 14rem)",
+                  fontSize: "clamp(5rem, 13.5vw, 17rem)",
                   fontWeight: 300,
                   lineHeight: 0.88,
-                  letterSpacing: "-0.03em",
+                  letterSpacing: "-0.04em",
                   color: "#F2F0ED",
                   userSelect: "none",
                 }}
@@ -214,10 +256,10 @@ export default function Home() {
                 style={{
                   display: "block",
                   fontFamily: "var(--font-cormorant)",
-                  fontSize: "clamp(5rem, 11.5vw, 14rem)",
+                  fontSize: "clamp(5rem, 13.5vw, 17rem)",
                   fontWeight: 300,
                   lineHeight: 0.88,
-                  letterSpacing: "-0.03em",
+                  letterSpacing: "-0.04em",
                   color: "#F2F0ED",
                   userSelect: "none",
                 }}
@@ -386,7 +428,7 @@ export default function Home() {
             width: "100%",
           }}
         >
-          {/* Ghost WEIGHT text — art layer beneath everything */}
+          {/* Ghost WEIGHT text — art layer, moves at its own depth plane */}
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -401,11 +443,12 @@ export default function Home() {
               fontWeight: 300,
               letterSpacing: "-0.06em",
               lineHeight: 0.8,
-              color: "rgba(242,240,237,0.028)",
+              color: "rgba(242,240,237,0.032)",
               userSelect: "none",
               pointerEvents: "none",
               zIndex: 0,
               whiteSpace: "nowrap",
+              y: weightY,
             }}
           >
             WEIGHT

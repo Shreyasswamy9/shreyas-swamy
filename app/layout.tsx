@@ -4,6 +4,8 @@ import "./globals.css"
 import CursorDot from "@/components/CursorDot"
 import NoiseOverlay from "@/components/NoiseOverlay"
 import SmoothScroll from "@/components/SmoothScroll"
+import { TransitionProvider } from "@/components/TransitionProvider"
+import CinematicIntro from "@/components/CinematicIntro"
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -49,11 +51,15 @@ export default function RootLayout({
       className={`${cormorant.variable} ${spaceGrotesk.variable} ${spaceMono.variable}`}
     >
       <body>
+        <CinematicIntro />
+        <div className="cinematic-vignette" aria-hidden="true" />
         <NoiseOverlay />
         <CursorDot />
-        <SmoothScroll>
-          {children}
-        </SmoothScroll>
+        <TransitionProvider>
+          <SmoothScroll>
+            {children}
+          </SmoothScroll>
+        </TransitionProvider>
       </body>
     </html>
   )
