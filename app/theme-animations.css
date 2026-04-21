@@ -1,0 +1,54 @@
+
+/* ─── THEME SUPPORT ─────────────────────────────────────────── */
+html[data-theme="light"] {
+  --color-void: #F5F5F5;
+  --color-surface: #FFFFFF;
+  --color-surface-2: #F9F9F9;
+  --color-border: #E0E0E0;
+  --color-muted: #888888;
+  --color-subtle: #B0B0B0;
+  --color-body: #1A1A1A;
+  --color-bright: #000000;
+}
+
+html[data-theme="light"] body {
+  background: var(--color-void);
+  color: var(--color-body);
+}
+
+html[data-theme="light"] .cursor-dot {
+  background: var(--color-body);
+}
+
+html[data-theme="light"] .cursor-dot.hovering {
+  background: rgba(26, 26, 26, 0.08);
+  border: 1px solid rgba(26, 26, 26, 0.25);
+}
+
+/* ─── ANIMATIONS ─────────────────────────────────────────── */
+@keyframes cardDrift {
+  0% { transform: translateY(var(--drift-y)) rotate(var(--drift-r)); }
+  100% { transform: translateY(calc(var(--drift-y) * -1)) rotate(var(--drift-r)); }
+}
+
+@keyframes footballPulse {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.35; }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); opacity: 0; }
+  50% { opacity: 0.5; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+/* ─── TOUCH INTERACTIONS ─────────────────────────────────────── */
+@media (hover: none) and (pointer: coarse) {
+  .cursor-dot {
+    display: none;
+  }
+
+  a, button {
+    cursor: pointer;
+  }
+}
